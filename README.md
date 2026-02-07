@@ -1,20 +1,19 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
 
-# Run and deploy your AI Studio app
+# ACC Group Recruitment Portal
 
-This contains everything you need to run your app locally.
+A high-end, corporate job application form designed for ACC (Arabian Construction Co.). This portal features a responsive design, multi-section form validation, and corporate branding.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1vnCyigiDKZonvqZF9F3b1Dgd5YAo8_1I
+## Features
+- **Corporate Branding**: Styled with ACC's signature gold and monochrome aesthetics.
+- **Responsive Design**: Optimized for desktop and mobile devices.
+- **Sectioned Form**: Organized into Basic Info, Contact, Job Details, Education, and Experience.
+- **SPA Ready**: Configured for seamless deployment and routing.
 
-## Run Locally
+## Deployment
 
-**Prerequisites:**  Node.js
+Click the button below to deploy this project to your own Vercel account with one click:
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F%5BPROJECT_URL%5D)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+*Note: Replace `[PROJECT_URL]` in the README with your actual repository URL for the button to function correctly.*
