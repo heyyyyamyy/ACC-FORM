@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { InputField } from './components/InputField';
 import { SelectField } from './components/SelectField';
@@ -20,17 +19,45 @@ const App: React.FC = () => {
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Form Submitted:', formData);
+
+    try {
+      const payload = {
+        ...formData,
+        submittedAt: new Date().toISOString(),
+      };
+
+      const res = await fetch(
+        "https://script.google.com/macros/s/AKfycbwkNi5urWSoa4rMKN8Non-7LgaR_Fss0G6M_qPs_Z0zIs-lGj7hp76wzARsdNVRlhBT_g/exec",
+        {
+          method: "POST",
+          headers: {
+            // IMPORTANT: Apps Script works best with text/plain
+            "Content-Type": "text/plain;charset=utf-8",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const result = await res.json();
+      console.log("Apps Script response:", result);
+
+      if (result.status === "success") {
+        setIsSuccess(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        throw new Error(result.message || "Submission failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Submission failed. Please try again.");
+    } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 1500);
+    }
   };
 
   const resetForm = () => {
@@ -47,7 +74,7 @@ const App: React.FC = () => {
           <p className="text-gray-600 mb-8 leading-relaxed">
             Thank you for applying to ACC Group. Our recruitment team will review your information and get in touch if your profile matches our requirements.
           </p>
-          <button 
+          <button
             onClick={resetForm}
             className="bg-[#1a1a1a] text-white px-8 py-3 rounded-sm font-semibold tracking-widest hover:bg-[#b89b5e] transition-colors uppercase text-xs"
           >
@@ -62,22 +89,22 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
       <section className="relative h-[450px] overflow-hidden">
-        <img 
-          src="https://img.freepik.com/free-photo/monochrome-scene-depicting-life-workers-construction-industry-site_23-2151431368.jpg?semt=ais_hybrid&w=740&q=80" 
-          alt="Recruitment Background" 
+        <img
+          src="https://img.freepik.com/free-photo/monochrome-scene-depicting-life-workers-construction-industry-site_23-2151431368.jpg?semt=ais_hybrid&w=740&q=80"
+          alt="Recruitment Background"
           className="absolute inset-0 w-full h-full object-cover scale-105"
         />
         <div className="absolute inset-0 bg-black/60"></div>
         <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex flex-col justify-center">
           {/* Official Logo */}
           <div className="absolute top-8 left-6 md:left-12 flex items-center">
-            <img 
-              src="https://www.arabianconstructioncompany.com/logo.png" 
-              alt="ACC Logo" 
+            <img
+              src="https://www.arabianconstructioncompany.com/logo.png"
+              alt="ACC Logo"
               className="h-12 md:h-16 w-auto"
             />
           </div>
-          
+
           <div className="mt-16">
             <h1 className="text-white text-5xl md:text-6xl font-bold mb-4">Recruitment</h1>
             <p className="text-white/90 text-lg md:text-xl max-w-2xl font-light">
@@ -99,7 +126,7 @@ const App: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-16">
-            
+
             {/* Section: Basic Information */}
             <div className="space-y-8">
               <div className="flex items-center gap-3 border-b border-gray-100 pb-2 mb-8">
@@ -107,18 +134,18 @@ const App: React.FC = () => {
                 <h3 className="text-xl font-bold uppercase tracking-widest">Basic Information</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
-                <InputField 
-                  label="Full Name" 
-                  name="fullName" 
-                  required 
-                  value={formData.fullName} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Full Name"
+                  name="fullName"
+                  required
+                  value={formData.fullName}
+                  onChange={handleInputChange}
                   placeholder="As per legal documents"
                 />
-                <SelectField 
-                  label="Gender" 
-                  name="gender" 
-                  value={formData.gender} 
+                <SelectField
+                  label="Gender"
+                  name="gender"
+                  value={formData.gender}
                   onChange={handleInputChange}
                   options={[
                     { label: 'Male', value: 'male' },
@@ -127,30 +154,30 @@ const App: React.FC = () => {
                     { label: 'Prefer not to say', value: 'prefer-not-to-say' },
                   ]}
                 />
-                <InputField 
-                  label="Date of Birth" 
-                  name="dob" 
-                  type="date" 
-                  value={formData.dob} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Date of Birth"
+                  name="dob"
+                  type="date"
+                  value={formData.dob}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Current City" 
-                  name="currentCity" 
-                  value={formData.currentCity} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Current City"
+                  name="currentCity"
+                  value={formData.currentCity}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Current State" 
-                  name="currentState" 
-                  value={formData.currentState} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Current State"
+                  name="currentState"
+                  value={formData.currentState}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Country" 
-                  name="country" 
-                  value={formData.country} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Country"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
@@ -162,33 +189,33 @@ const App: React.FC = () => {
                 <h3 className="text-xl font-bold uppercase tracking-widest">Contact Details</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
-                <InputField 
-                  label="Primary Mobile Number" 
-                  name="primaryMobile" 
-                  required 
-                  value={formData.primaryMobile} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Primary Mobile Number"
+                  name="primaryMobile"
+                  required
+                  value={formData.primaryMobile}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Alternate Mobile Number" 
-                  name="alternateMobile" 
-                  value={formData.alternateMobile} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Alternate Mobile Number"
+                  name="alternateMobile"
+                  value={formData.alternateMobile}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Primary Email Address" 
-                  name="primaryEmail" 
+                <InputField
+                  label="Primary Email Address"
+                  name="primaryEmail"
                   type="email"
-                  required 
-                  value={formData.primaryEmail} 
-                  onChange={handleInputChange} 
+                  required
+                  value={formData.primaryEmail}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Alternate Email Address" 
-                  name="alternateEmail" 
+                <InputField
+                  label="Alternate Email Address"
+                  name="alternateEmail"
                   type="email"
-                  value={formData.alternateEmail} 
-                  onChange={handleInputChange} 
+                  value={formData.alternateEmail}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
@@ -200,24 +227,24 @@ const App: React.FC = () => {
                 <h3 className="text-xl font-bold uppercase tracking-widest">Job Details</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
-                <InputField 
-                  label="Role Applying For" 
-                  name="roleApplyingFor" 
-                  required 
-                  value={formData.roleApplyingFor} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Role Applying For"
+                  name="roleApplyingFor"
+                  required
+                  value={formData.roleApplyingFor}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Preferred Job Location" 
-                  name="preferredJobLocation" 
+                <InputField
+                  label="Preferred Job Location"
+                  name="preferredJobLocation"
                   placeholder="Remote / City Preference"
-                  value={formData.preferredJobLocation} 
-                  onChange={handleInputChange} 
+                  value={formData.preferredJobLocation}
+                  onChange={handleInputChange}
                 />
-                <SelectField 
-                  label="Employment Type" 
-                  name="employmentType" 
-                  value={formData.employmentType} 
+                <SelectField
+                  label="Employment Type"
+                  name="employmentType"
+                  value={formData.employmentType}
                   onChange={handleInputChange}
                   options={[
                     { label: 'Full Time', value: 'full-time' },
@@ -235,11 +262,11 @@ const App: React.FC = () => {
                 <h3 className="text-xl font-bold uppercase tracking-widest">Education Details</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
-                <SelectField 
-                  label="Highest Qualification" 
-                  name="highestQualification" 
+                <SelectField
+                  label="Highest Qualification"
+                  name="highestQualification"
                   required
-                  value={formData.highestQualification} 
+                  value={formData.highestQualification}
                   onChange={handleInputChange}
                   options={[
                     { label: '10th', value: '10th' },
@@ -250,29 +277,29 @@ const App: React.FC = () => {
                     { label: 'Other', value: 'other' },
                   ]}
                 />
-                <InputField 
-                  label="Degree / Course Name" 
-                  name="degreeName" 
-                  value={formData.degreeName} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Degree / Course Name"
+                  name="degreeName"
+                  value={formData.degreeName}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Specialization" 
-                  name="specialization" 
-                  value={formData.specialization} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Specialization"
+                  name="specialization"
+                  value={formData.specialization}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="College / University Name" 
-                  name="collegeName" 
-                  value={formData.collegeName} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="College / University Name"
+                  name="collegeName"
+                  value={formData.collegeName}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Year of Passing" 
-                  name="yearOfPassing" 
-                  value={formData.yearOfPassing} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Year of Passing"
+                  name="yearOfPassing"
+                  value={formData.yearOfPassing}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
@@ -284,11 +311,11 @@ const App: React.FC = () => {
                 <h3 className="text-xl font-bold uppercase tracking-widest">Experience Details</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
-                <SelectField 
-                  label="Total Years of Experience" 
-                  name="totalExperience" 
+                <SelectField
+                  label="Total Years of Experience"
+                  name="totalExperience"
                   required
-                  value={formData.totalExperience} 
+                  value={formData.totalExperience}
                   onChange={handleInputChange}
                   options={[
                     { label: 'Fresher', value: 'fresher' },
@@ -298,43 +325,43 @@ const App: React.FC = () => {
                     { label: '5+ Years', value: '5+' },
                   ]}
                 />
-                <InputField 
-                  label="Current Company Name" 
-                  name="currentCompany" 
-                  value={formData.currentCompany} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Current Company Name"
+                  name="currentCompany"
+                  value={formData.currentCompany}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Current Job Role" 
-                  name="currentJobRole" 
-                  value={formData.currentJobRole} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Current Job Role"
+                  name="currentJobRole"
+                  value={formData.currentJobRole}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Key Skills" 
-                  name="keySkills" 
+                <InputField
+                  label="Key Skills"
+                  name="keySkills"
                   required
                   placeholder="Comma separated"
-                  value={formData.keySkills} 
-                  onChange={handleInputChange} 
+                  value={formData.keySkills}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Current CTC" 
-                  name="currentCTC" 
-                  value={formData.currentCTC} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Current CTC"
+                  name="currentCTC"
+                  value={formData.currentCTC}
+                  onChange={handleInputChange}
                 />
-                <InputField 
-                  label="Expected CTC" 
-                  name="expectedCTC" 
-                  value={formData.expectedCTC} 
-                  onChange={handleInputChange} 
+                <InputField
+                  label="Expected CTC"
+                  name="expectedCTC"
+                  value={formData.expectedCTC}
+                  onChange={handleInputChange}
                 />
-                <SelectField 
-                  label="Notice Period" 
-                  name="noticePeriod" 
+                <SelectField
+                  label="Notice Period"
+                  name="noticePeriod"
                   required
-                  value={formData.noticePeriod} 
+                  value={formData.noticePeriod}
                   onChange={handleInputChange}
                   options={[
                     { label: 'Immediate', value: 'immediate' },
@@ -387,9 +414,9 @@ const App: React.FC = () => {
         <div className="lg:col-span-4 hidden lg:block">
           <div className="sticky top-12 space-y-12">
             <div className="relative overflow-hidden group">
-              <img 
-                src="https://picsum.photos/id/111/600/800" 
-                alt="Construction" 
+              <img
+                src="https://picsum.photos/id/111/600/800"
+                alt="Construction"
                 className="w-full h-auto rounded-sm transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
@@ -416,16 +443,16 @@ const App: React.FC = () => {
       {/* Footer */}
       <footer className="bg-[#1a1a1a] text-white py-12 border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center">
-                <img 
-                  src="https://www.arabianconstructioncompany.com/logo.png" 
-                  alt="ACC Logo" 
-                  className="h-10 w-auto" 
-                />
-            </div>
-            <div className="text-center md:text-right text-xs text-gray-500 font-medium tracking-widest">
-                &copy; {new Date().getFullYear()} ARABIAN CONSTRUCTION CO. ALL RIGHTS RESERVED.
-            </div>
+          <div className="flex items-center">
+            <img
+              src="https://www.arabianconstructioncompany.com/logo.png"
+              alt="ACC Logo"
+              className="h-10 w-auto"
+            />
+          </div>
+          <div className="text-center md:text-right text-xs text-gray-500 font-medium tracking-widest">
+            &copy; {new Date().getFullYear()} ARABIAN CONSTRUCTION CO. ALL RIGHTS RESERVED.
+          </div>
         </div>
       </footer>
     </div>
