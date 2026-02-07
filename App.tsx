@@ -107,7 +107,7 @@ const App: React.FC = () => {
         <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex flex-col justify-center">
           <div className="absolute top-8 left-6 md:left-12">
             <img
-              src="/logo.jpg"
+              src="/logo.png"
               className="h-12 md:h-16"
             />
           </div>
