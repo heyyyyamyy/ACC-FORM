@@ -99,7 +99,7 @@ const App: React.FC = () => {
       {/* HERO */}
       <section className="relative h-[450px] overflow-hidden">
         <img
-          src="/logo.jpg"
+          src="https://img.freepik.com/free-photo/monochrome-scene-depicting-life-workers-construction-industry-site_23-2151431368.jpg?semt=ais_hybrid&w=740&q=80"
           className="absolute inset-0 w-full h-full object-cover scale-105"
         />
         <div className="absolute inset-0 bg-black/60"></div>
